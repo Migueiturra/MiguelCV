@@ -36,6 +36,20 @@
     const list=kind==='experience'?data.experience:data.education;
     const el=kind==='experience'?$('#experienceList'):$('#educationList');
     el.innerHTML=list.map((it,i)=>`<div class="repeat-card" data-id="${esc(it.id)}"><button class="remove-entry" type="button" aria-label="Quitar ${kind==='experience'?'experiencia':'formación'} ${i+1}">×</button><p class="entry-head">${kind==='experience'?'Experiencia':'Formación'} ${i+1}</p><div class="field-grid"><label class="field"><span>${kind==='experience'?'Cargo':'Título o grado'}</span><input data-kind="${kind}" data-id="${esc(it.id)}" data-key="title" placeholder="${kind==='experience'?'Analista de personas':'Psicología'}" value="${esc(it.title)}"></label><label class="field"><span>${kind==='experience'?'Empresa':'Institución'}</span><input data-kind="${kind}" data-id="${esc(it.id)}" data-key="org" placeholder="Nombre de la organización" value="${esc(it.org)}"></label><label class="field"><span>Ubicación <small>Opcional</small></span><input data-kind="${kind}" data-id="${esc(it.id)}" data-key="place" placeholder="Ciudad" value="${esc(it.place)}"></label><label class="field"><span>Fechas</span><input data-kind="${kind}" data-id="${esc(it.id)}" data-key="date" placeholder="2022 – Actualidad" value="${esc(it.date)}"></label>${kind==='experience'?`<label class="field full"><span>Responsabilidades o logros <small>Un punto por línea</small></span><textarea rows="3" data-kind="${kind}" data-id="${esc(it.id)}" data-key="desc" placeholder="Describe tus principales aportes, responsabilidades o resultados.">${esc(it.desc)}</textarea></label>`:''}</div></div>`).join('');
+    el.querySelectorAll('.repeat-card').forEach((card,index)=>{
+      const head=card.querySelector('.entry-head');
+      const remove=card.querySelector('.remove-entry');
+      const tools=document.createElement('div');tools.className='entry-tools';
+      head.before(tools);tools.append(head);
+      const makeMove=(direction,label)=>{
+        const button=document.createElement('button');button.type='button';button.className='move-entry';button.textContent=direction<0?'&#8593;':'&#8595;';button.innerHTML=direction<0?'&#8593;':'&#8595;';
+        button.setAttribute('aria-label',label+' '+(index+1));button.disabled=direction<0?index===0:index===list.length-1;
+        button.addEventListener('click',()=>{const current=list.findIndex(item=>item.id===card.dataset.id);const next=current+direction;if(next<0||next>=list.length)return;[list[current],list[next]]=[list[next],list[current]];renderInputs(kind);render();saveDraft();});
+        tools.append(button);
+      };
+      makeMove(-1,'Subir '+(kind==='experience'?'experiencia':'formación'));makeMove(1,'Bajar '+(kind==='experience'?'experiencia':'formación'));
+      remove.classList.add('entry-remove');remove.setAttribute('aria-label','Quitar '+(kind==='experience'?'experiencia':'formación')+' '+(index+1));tools.append(remove);
+    });
     el.querySelectorAll('.remove-entry').forEach(button=>button.addEventListener('click',()=>{
       const id=button.closest('.repeat-card').dataset.id;
       const target=kind==='experience'?data.experience:data.education;
@@ -72,6 +86,19 @@
     $('#pLanguages').textContent=other||'Agrega idiomas o antecedentes complementarios.';
     $('#pLanguages').classList.toggle('muted-preview',!other);
     $('#pLanguagesSection').style.display=other?'':'none';
+    renderCompletion();
+  }
+
+  function renderCompletion(){
+    const checks=[
+      ['Nombre y contacto',Boolean(data.name&&(data.email||data.phone))],
+      ['Perfil profesional',Boolean(data.profile.trim())],
+      ['Experiencia',data.experience.some(item=>item.title||item.org)],
+      ['Formación',data.education.some(item=>item.title||item.org)],
+      ['Habilidades',Boolean(data.skills.trim())]
+    ];
+    const done=checks.filter(([,ok])=>ok).length;
+    $('#completionBox').innerHTML='<div class="completion-head"><strong>Tu CV está '+done+' de '+checks.length+' secciones listo</strong><span>'+done+'/'+checks.length+'</span></div><ul>'+checks.map(([label,ok])=>'<li class="'+(ok?'is-done':'')+'"><span aria-hidden="true">'+(ok?'&#10003;':'&#9675;')+'</span>'+label+'</li>').join('')+'</ul><small>Es una guía; no necesitas completar todas las secciones.</small>';
   }
   let saveTimer;
   function saveDraft(){
@@ -237,6 +264,10 @@
     location.reload();
   });
   $('#downloadButton').addEventListener('click',()=>window.print());
+  $('#layoutSelect').addEventListener('change',event=>{
+    $('#resume').classList.toggle('compact',event.target.value==='compact');
+    try{localStorage.setItem('cvClaroLayout:v1',event.target.value);}catch{}
+  });
   $('#fileInput').addEventListener('change',async event=>{
     const input=event.currentTarget,file=input.files?.[0];
     if(!file)return;
@@ -285,5 +316,6 @@
   });
 
   loadDraft();
+  try{if(localStorage.getItem('cvClaroLayout:v1')==='compact'){$('#layoutSelect').value='compact';$('#resume').classList.add('compact');}}catch{}
   render();
 })();
