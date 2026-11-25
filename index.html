@@ -31,6 +31,7 @@
           <div class="form-top"><div><span class="step">02</span><h2>Completa tu información</h2></div><button class="text-button" id="resetButton">Empezar de nuevo</button></div>
           <p class="helper">Revisa lo importado y corrige lo que haga falta. Los campos son editables.</p>
           <p class="draft-note" id="draftStatus" aria-live="polite">El borrador se guarda en este navegador.</p>
+          <div class="completion-box" id="completionBox" aria-live="polite"></div>
           <div id="formStatus" class="status" role="status" aria-live="polite"></div>
           <div class="field-grid">
             <label class="field full"><span>Nombre y apellido</span><input data-field="name" placeholder="Ej. Camila González" /></label>
@@ -54,7 +55,7 @@
           <p class="print-help">Se abrirá el diálogo de impresión del navegador. Elige «Guardar como PDF» para descargarlo.</p>
         </div>
       </div>
-      <aside class="preview-wrap"><div class="preview-label"><span>VISTA PREVIA</span><span class="live-dot">ACTUALIZADA AL ESCRIBIR</span></div><article class="resume" id="resume">
+      <aside class="preview-wrap"><div class="preview-label"><span>VISTA PREVIA</span><label class="style-control">Diseño <select id="layoutSelect" aria-label="Diseño del currículum"><option value="classic">Clásico</option><option value="compact">Compacto</option></select></label></div><article class="resume" id="resume">
         <div class="resume-header"><h2 id="pName">Tu nombre</h2><div class="contact" id="pContact">correo@ejemplo.cl <span>·</span> Ciudad, País</div></div>
         <section class="resume-section" id="pProfileSection"><h3>Perfil</h3><p id="pProfile" class="muted-preview">Tu perfil profesional aparecerá aquí.</p></section>
         <section class="resume-section"><h3>Experiencia</h3><div id="pExperience"><p class="muted-preview">Agrega tu experiencia laboral.</p></div></section>
