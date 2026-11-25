@@ -8,10 +8,10 @@
   <title>CV Claro — Crea tu currículum</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="./styles.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -22,8 +22,7 @@
       <div class="editor">
         <div class="start-card" id="startCard">
           <div class="card-heading"><span class="step">01</span><div><h2>¿Cómo quieres empezar?</h2><p>Puedes importar un documento o completar los datos manualmente.</p></div></div>
-          <label class="upload" for="fileInput"><span class="upload-icon">↑</span><span><strong>Subir un CV</strong><small>PDF o Word (.docx) · Máximo 8 MB</small></span><span class="upload-action">Elegir archivo</span></label>
-          <input id="fileInput" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+          <label class="upload" for="fileInput"><input id="fileInput" class="visually-hidden" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" aria-describedby="fileHelp importStatus" /><span class="upload-icon" aria-hidden="true">↑</span><span><strong>Subir un CV</strong><small id="fileHelp">PDF o Word (.docx) · Máximo 8 MB</small></span><span class="upload-action" aria-hidden="true">Elegir archivo</span></label>
           <div class="or"><span></span>o<span></span></div>
           <button id="startBlank" class="blank-button">Crear mi CV desde cero <span>→</span></button>
           <div id="importStatus" class="status" aria-live="polite"></div>
@@ -31,6 +30,8 @@
         <div id="formPanel" class="form-panel hidden">
           <div class="form-top"><div><span class="step">02</span><h2>Completa tu información</h2></div><button class="text-button" id="resetButton">Empezar de nuevo</button></div>
           <p class="helper">Revisa lo importado y corrige lo que haga falta. Los campos son editables.</p>
+          <p class="draft-note" id="draftStatus" aria-live="polite">El borrador se guarda en este navegador.</p>
+          <div id="formStatus" class="status" role="status" aria-live="polite"></div>
           <div class="field-grid">
             <label class="field full"><span>Nombre y apellido</span><input data-field="name" placeholder="Ej. Camila González" /></label>
             <label class="field"><span>Correo electrónico</span><input data-field="email" type="email" placeholder="nombre@correo.cl" /></label>
@@ -49,7 +50,8 @@
             <label class="field"><span>Otros antecedentes <small>Opcional</small></span><input data-field="extras" placeholder="Certificaciones, voluntariado…" /></label>
           </div>
           <details class="source-details" id="sourceDetails"><summary>Ver texto extraído del documento</summary><textarea id="sourceText" rows="8" readonly></textarea><small>La extracción puede variar según el diseño del archivo. Usa el texto como referencia y revisa cada dato.</small></details>
-          <button class="download-button" id="downloadButton">Descargar CV en PDF <span>↓</span></button>
+          <button class="download-button" id="downloadButton">Imprimir o guardar como PDF <span>↓</span></button>
+          <p class="print-help">Se abrirá el diálogo de impresión del navegador. Elige «Guardar como PDF» para descargarlo.</p>
         </div>
       </div>
       <aside class="preview-wrap"><div class="preview-label"><span>VISTA PREVIA</span><span class="live-dot">ACTUALIZADA AL ESCRIBIR</span></div><article class="resume" id="resume">
@@ -62,7 +64,7 @@
         <div class="resume-footer">CURRÍCULUM VITAE</div>
       </article><div class="preview-note">Formato sobrio, legible y compatible con sistemas de selección.</div></aside>
     </section>
-    <section class="how"><div><span class="step">03</span><h2>Revisa, ajusta,<br/>descarga.</h2></div><p>El documento se arma con una estructura clara y consistente. Antes de enviarlo, comprueba nombres, fechas y datos de contacto. No guardamos tus archivos ni tu información.</p></section>
+    <section class="how"><div><span class="step">03</span><h2>Revisa, ajusta,<br/>descarga.</h2></div><p>Comprueba nombres, fechas y datos antes de compartirlo. El archivo se lee en tu dispositivo y no se envía a un servidor. El borrador queda guardado localmente en este navegador; usa «Empezar de nuevo» para borrarlo. Los lectores de PDF/Word y las tipografías se cargan desde servicios externos.</p></section>
   </main>
   <footer><span>CV Claro</span><span>Herramienta gratuita · Tus datos permanecen en tu dispositivo</span></footer>
 </body>
